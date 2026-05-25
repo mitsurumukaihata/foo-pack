@@ -32,13 +32,15 @@ body {
   background: var(--cream);
   color: var(--navy);
   overflow-x: hidden;
-  /* 日本語の文中改行を抑制 (単語途中で切れないように) */
-  word-break: keep-all;
-  overflow-wrap: break-word;
   line-break: strict;
 }
-/* 数字・英字が連続したフレーズは折返し可、日本語は単語単位 */
-h1, h2, h3, h4, h5, p, span, a, li, div { word-break: keep-all; overflow-wrap: break-word; line-break: strict; }
+/* 日本語テキスト要素のみに keep-all を適用 (div には適用しない) */
+h1, h2, h3, h4, h5, h6, p { line-break: strict; overflow-wrap: anywhere; }
+.hero-title-jp, .hero-sub, .ethos-body, .sec-title-jp, .sec-body,
+.feat-title, .feat-body, .mgmt-t, .mgmt-d, .lease-t, .lease-d,
+.addon-text, .addon-item-name, .flow-t, .flow-d,
+.pricing-t-jp, .pricing-d, .cta-d, .cta-t-jp,
+.contact-v { word-break: normal; overflow-wrap: anywhere; line-break: strict; }
 
 /* NAV */
 nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 18px 40px; background: rgba(13,31,60,0.97); backdrop-filter: blur(10px); }
