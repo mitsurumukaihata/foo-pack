@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>f.o.oパックライト｜運送業のためのタイヤ管理サブスクリプション｜タイヤマネージャー フー</title>
+<meta name="description" content="運送業のタイヤを「買う」から「任せる」へ。季節タイヤの交換・パンク対応・出張サービス・コスト管理までワンパッケージ。広島・西日本対応。有限会社タイヤマネージャー フー。">
+<meta property="og:title" content="f.o.oパックライト｜タイヤ管理サブスクリプション">
+<meta property="og:description" content="季節タイヤ交換・パンク対応・出張サービス・コスト管理をワンパッケージ。運送業の現場と経営を、タイヤから軽くする。">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy-900: #061734;
+    --navy-800: #0B2545;
+    --navy-700: #133A6B;
+    --navy-500: #1E5BA8;
+    --accent: #4DA3E0;
+    --silver-200: #E5E9EF;
+    --silver-300: #C9D2DD;
+    --silver-500: #8898AC;
+    --ink: #1B2330;
+    --ink-2: #4A5566;
+    --white: #FFFFFF;
+    --bg: #F7F9FC;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Noto Sans JP', 'Inter', -apple-system, sans-serif;
+    color: var(--ink);
+    background: var(--white);
+    line-height: 1.75;
+    font-feature-settings: "palt";
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+  .container-narrow { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+
+  /* Header */
+  .header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(6, 23, 52, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .header-inner {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 68px;
+  }
+  .logo {
+    color: var(--white);
+    font-weight: 800; font-size: 18px; letter-spacing: 0.02em;
+    text-decoration: none;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .logo-mark {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--accent), var(--navy-500));
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-weight: 900; font-size: 14px;
+  }
+  .nav { display: flex; gap: 28px; }
+  .nav a {
+    color: var(--silver-200); text-decoration: none;
+    font-size: 14px; font-weight: 500;
+    transition: color .2s;
+  }
+  .nav a:hover { color: var(--white); }
+  .nav-cta {
+    background: var(--accent); color: var(--white) !important;
+    padding: 8px 18px; border-radius: 6px;
+    font-weight: 600;
+  }
+  .nav-cta:hover { background: #66B5EE; }
+  @media (max-width: 720px) {
+    .nav { display: none; }
+    .nav-cta-mobile {
+      display: inline-block; background: var(--accent); color: white;
+      padding: 8px 14px; border-radius: 6px; font-size: 13px;
+      font-weight: 600; text-decoration: none;
+    }
+  }
+  @media (min-width: 721px) { .nav-cta-mobile { display: none; } }
+
+  /* Hero */
+  .hero {
+    background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 60%, var(--navy-700) 100%);
+    color: var(--white);
+    padding: 168px 0 120px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background-image:
+      radial-gradient(circle at 80% 20%, rgba(77,163,224,0.18) 0%, transparent 50%),
+      radial-gradient(circle at 10% 80%, rgba(30,91,168,0.22) 0%, transparent 55%);
+    pointer-events: none;
+  }
+  .hero-grid {
+    position: relative; z-index: 1;
+    display: grid; grid-template-columns: 1.2fr 1fr;
+    gap: 64px; align-items: center;
+  }
+  @media (max-width: 880px) {
+    .hero { padding: 130px 0 80px; }
+    .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+  }
+  .hero-eyebrow {
+    display: inline-block;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.18em;
+    color: var(--accent);
+    border: 1px solid rgba(77,163,224,0.4);
+    padding: 6px 14px; border-radius: 999px;
+    margin-bottom: 28px;
+  }
+  .hero h1 {
+    font-size: clamp(32px, 5vw, 54px);
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    margin-bottom: 24px;
+  }
+  .hero h1 .accent { color: var(--accent); }
+  .hero-sub {
+    font-size: clamp(15px, 1.5vw, 18px);
+    color: var(--silver-200);
+    line-height: 1.9;
+    margin-bottom: 40px;
+    max-width: 560px;
+  }
+  .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 16px 32px; border-radius: 8px;
+    font-weight: 700; font-size: 15px;
+    text-decoration: none;
+    transition: transform .15s, box-shadow .15s, background .15s;
+    cursor: pointer; border: none;
+  }
+  .btn-primary {
+    background: var(--accent); color: var(--white);
+    box-shadow: 0 8px 24px rgba(77,163,224,0.32);
+  }
+  .btn-primary:hover { background: #66B5EE; transform: translateY(-2px); }
+  .btn-ghost {
+    background: transparent; color: var(--white);
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.5); }
+
+  /* Hero visual */
+  .hero-visual {
+    aspect-ratio: 1 / 1;
+    border-radius: 24px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 36px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    align-content: center;
+  }
+  .stat-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 24px;
+  }
+  .stat-num {
+    font-size: 38px; font-weight: 800; color: var(--white);
+    line-height: 1; margin-bottom: 8px;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.02em;
+  }
+  .stat-num .unit { font-size: 16px; color: var(--silver-300); margin-left: 4px; }
+  .stat-label { font-size: 12px; color: var(--silver-300); letter-spacing: 0.04em; }
+
+  /* Section common */
+  section { padding: 110px 0; }
+  @media (max-width: 720px) { section { padding: 72px 0; } }
+  .section-eyebrow {
+    text-align: center;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.2em;
+    color: var(--navy-500);
+    margin-bottom: 16px;
+  }
+  .section-title {
+    text-align: center;
+    font-size: clamp(26px, 3.5vw, 38px);
+    font-weight: 800;
+    color: var(--navy-900);
+    line-height: 1.4;
+    margin-bottom: 20px;
+    letter-spacing: -0.01em;
+  }
+  .section-lead {
+    text-align: center;
+    font-size: 16px; color: var(--ink-2);
+    max-width: 680px; margin: 0 auto 64px;
+    line-height: 1.9;
+  }
+
+  /* Problem section */
+  .problem {
+    background: var(--bg);
+  }
+  .problem-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  }
+  @media (max-width: 860px) {
+    .problem-grid { grid-template-columns: 1fr; }
+  }
+  .problem-card {
+    background: var(--white);
+    border: 1px solid var(--silver-200);
+    border-radius: 14px;
+    padding: 36px 28px;
+    position: relative;
+  }
+  .problem-num {
+    font-family: 'Inter', sans-serif;
+    font-size: 14px; font-weight: 700;
+    color: var(--silver-500);
+    letter-spacing: 0.1em;
+    margin-bottom: 16px;
+  }
+  .problem-card h3 {
+    font-size: 18px; font-weight: 700;
+    color: var(--navy-900);
+    margin-bottom: 12px;
+    line-height: 1.5;
+  }
+  .problem-card p {
+    font-size: 14px; color: var(--ink-2); line-height: 1.85;
+  }
+
+  /* Service section (6 features) */
+  .services {
+    background: var(--white);
+  }
+  .service-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px;
+  }
+  @media (max-width: 980px) { .service-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .service-grid { grid-template-columns: 1fr; } }
+  .service-card {
+    background: linear-gradient(180deg, #FAFCFF 0%, #F2F6FC 100%);
+    border: 1px solid var(--silver-200);
+    border-radius: 16px;
+    padding: 36px 30px;
+    transition: transform .2s, box-shadow .2s, border-color .2s;
+  }
+  .service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(11,37,69,0.10);
+    border-color: var(--accent);
+  }
+  .service-icon {
+    width: 56px; height: 56px;
+    background: var(--navy-800);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--white);
+    margin-bottom: 22px;
+  }
+  .service-num {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px; font-weight: 700;
+    color: var(--accent); letter-spacing: 0.15em;
+    margin-bottom: 8px;
+  }
+  .service-card h3 {
+    font-size: 19px; font-weight: 700;
+    color: var(--navy-900);
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+  .service-card p {
+    font-size: 14px; color: var(--ink-2); line-height: 1.9;
+  }
+  .service-note {
+    display: inline-block; margin-top: 12px;
+    font-size: 11px; color: var(--silver-500);
+  }
+
+  /* Management fee section */
+  .management {
+    background: var(--navy-900);
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+  }
+  .management::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 90% 10%, rgba(77,163,224,0.15) 0%, transparent 50%),
+      radial-gradient(circle at 5% 90%, rgba(30,91,168,0.2) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .management .section-eyebrow { color: var(--accent); }
+  .management .section-title { color: var(--white); }
+  .management .section-lead { color: var(--silver-200); }
+  .mgmt-grid {
+    position: relative; z-index: 1;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+  }
+  @media (max-width: 980px) { .mgmt-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 540px) { .mgmt-grid { grid-template-columns: 1fr; } }
+  .mgmt-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 32px 24px;
+    text-align: center;
+  }
+  .mgmt-icon {
+    width: 48px; height: 48px;
+    background: rgba(77,163,224,0.15);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent);
+    margin: 0 auto 18px;
+  }
+  .mgmt-card h4 {
+    font-size: 15px; font-weight: 700;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .mgmt-card p {
+    font-size: 12px; color: var(--silver-300);
+    line-height: 1.7;
+  }
+
+  /* Add-on pack */
+  .addon {
+    background: var(--bg);
+  }
+  .addon-card {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 56px;
+    display: grid; grid-template-columns: 1fr 1.4fr;
+    gap: 56px; align-items: center;
+    border: 1px solid var(--silver-200);
+  }
+  @media (max-width: 880px) {
+    .addon-card { grid-template-columns: 1fr; padding: 40px 28px; gap: 32px; }
+  }
+  .addon-card h3 {
+    font-size: 26px; font-weight: 800; color: var(--navy-900);
+    line-height: 1.5; margin-bottom: 16px;
+  }
+  .addon-card .lead {
+    font-size: 14px; color: var(--ink-2); line-height: 1.9;
+  }
+  .addon-list {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+    list-style: none;
+  }
+  @media (max-width: 480px) { .addon-list { grid-template-columns: 1fr; } }
+  .addon-list li {
+    background: var(--bg);
+    border-left: 3px solid var(--accent);
+    padding: 14px 16px;
+    border-radius: 4px;
+    font-size: 14px; font-weight: 500;
+    color: var(--navy-800);
+  }
+
+  /* Lease end patterns */
+  .lease {
+    background: var(--white);
+  }
+  .lease-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    margin-top: 16px;
+  }
+  @media (max-width: 880px) { .lease-grid { grid-template-columns: 1fr; } }
+  .lease-card {
+    background: var(--white);
+    border: 2px solid var(--silver-200);
+    border-radius: 16px;
+    padding: 36px 28px;
+    position: relative;
+    transition: border-color .2s, transform .2s;
+  }
+  .lease-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+  .lease-pattern {
+    position: absolute; top: -14px; left: 28px;
+    background: var(--navy-800);
+    color: var(--white);
+    font-family: 'Inter', sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.15em;
+    padding: 6px 14px; border-radius: 6px;
+  }
+  .lease-card h4 {
+    font-size: 17px; font-weight: 700;
+    color: var(--navy-900);
+    line-height: 1.6;
+    margin-top: 12px;
+    margin-bottom: 16px;
+  }
+  .lease-card p {
+    font-size: 13px; color: var(--ink-2); line-height: 1.85;
+  }
+
+  /* Report flow */
+  .report {
+    background: var(--bg);
+  }
+  .report-flow {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 56px;
+    border: 1px solid var(--silver-200);
+  }
+  @media (max-width: 720px) { .report-flow { padding: 32px 24px; } }
+  .flow-steps {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    position: relative;
+  }
+  @media (max-width: 720px) { .flow-steps { grid-template-columns: 1fr; } }
+  .flow-step {
+    text-align: center;
+    position: relative;
+  }
+  .flow-num {
+    width: 44px; height: 44px; margin: 0 auto 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700; font-size: 16px;
+  }
+  .flow-step h4 {
+    font-size: 16px; font-weight: 700;
+    color: var(--navy-900);
+    margin-bottom: 10px;
+  }
+  .flow-step p {
+    font-size: 13px; color: var(--ink-2); line-height: 1.8;
+  }
+  .flow-channels {
+    margin-top: 40px; padding-top: 36px;
+    border-top: 1px solid var(--silver-200);
+    text-align: center;
+  }
+  .flow-channels-label {
+    font-size: 12px; font-weight: 600; color: var(--silver-500);
+    letter-spacing: 0.12em; margin-bottom: 16px;
+  }
+  .flow-channels-list {
+    display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+  }
+  .flow-channel {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--bg);
+    padding: 10px 22px; border-radius: 999px;
+    font-size: 14px; font-weight: 600;
+    color: var(--navy-800);
+  }
+
+  /* Pricing */
+  .pricing {
+    background: var(--white);
+  }
+  .pricing-card {
+    max-width: 720px; margin: 0 auto;
+    background: linear-gradient(135deg, var(--navy-900), var(--navy-700));
+    color: var(--white);
+    border-radius: 24px;
+    padding: 64px 48px;
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(11,37,69,0.18);
+  }
+  @media (max-width: 720px) { .pricing-card { padding: 44px 28px; } }
+  .pricing-eyebrow {
+    display: inline-block;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+    color: var(--accent);
+    border: 1px solid rgba(77,163,224,0.4);
+    padding: 6px 14px; border-radius: 999px;
+    margin-bottom: 24px;
+  }
+  .pricing-card h3 {
+    font-size: clamp(24px, 3vw, 32px);
+    font-weight: 800;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+  .pricing-card p {
+    font-size: 15px; color: var(--silver-200);
+    line-height: 1.9; margin-bottom: 32px;
+    max-width: 520px; margin-left: auto; margin-right: auto;
+  }
+  .pricing-factors {
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+    margin: 28px 0 36px;
+  }
+  .factor {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 8px 18px; border-radius: 999px;
+    font-size: 13px; color: var(--silver-200);
+  }
+
+  /* Contact / CTA */
+  .contact {
+    background: var(--navy-900);
+    color: var(--white);
+    padding: 100px 0;
+  }
+  .contact-grid {
+    display: grid; grid-template-columns: 1.2fr 1fr; gap: 56px;
+    align-items: start;
+  }
+  @media (max-width: 880px) {
+    .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+  }
+  .contact h2 {
+    font-size: clamp(28px, 3.5vw, 38px);
+    font-weight: 800;
+    line-height: 1.4;
+    margin-bottom: 16px;
+  }
+  .contact-lead {
+    font-size: 15px; color: var(--silver-200);
+    line-height: 1.9; margin-bottom: 36px;
+  }
+  .contact-info {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 32px;
+  }
+  .contact-row {
+    display: flex; align-items: start; gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .contact-row:last-child { border-bottom: none; }
+  .contact-label {
+    font-size: 12px; color: var(--silver-300);
+    min-width: 64px; padding-top: 4px;
+    letter-spacing: 0.06em;
+  }
+  .contact-value {
+    font-size: 15px; color: var(--white); font-weight: 500;
+    line-height: 1.7;
+  }
+  .contact-value a { color: var(--accent); text-decoration: none; }
+  .contact-value a:hover { text-decoration: underline; }
+  .contact-tel {
+    font-family: 'Inter', sans-serif;
+    font-size: 20px; font-weight: 700;
+  }
+
+  /* Footer */
+  .footer {
+    background: #04102A;
+    color: var(--silver-300);
+    padding: 36px 0;
+    text-align: center;
+    font-size: 12px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .footer a { color: var(--silver-300); text-decoration: none; }
+  .footer a:hover { color: var(--white); }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="container header-inner">
+    <a href="#" class="logo">
+      <span class="logo-mark">F</span>
+      <span>f.o.o pack</span>
+    </a>
+    <nav class="nav">
+      <a href="#service">サービス</a>
+      <a href="#management">管理料</a>
+      <a href="#lease">継続プラン</a>
+      <a href="#pricing">料金</a>
+      <a href="#contact" class="nav-cta">お問い合わせ</a>
+    </nav>
+    <a href="#contact" class="nav-cta-mobile">お問い合わせ</a>
+  </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="hero-eyebrow">TIRE MANAGEMENT SUBSCRIPTION</span>
+      <h1>タイヤを<span class="accent">「買う」</span>から<br>「<span class="accent">任せる</span>」へ。</h1>
+      <p class="hero-sub">
+        f.o.oパックライトは、運送業のタイヤを一括管理するサブスクリプション型サービスです。
+        季節タイヤの交換、パンク対応、出張サービス、コスト管理まで。
+        現場と経理を、タイヤから解放します。
+      </p>
+      <div class="hero-ctas">
+        <a href="#contact" class="btn btn-primary">無料見積もりを依頼する →</a>
+        <a href="#service" class="btn btn-ghost">サービス内容を見る</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="stat-card">
+        <div class="stat-num">6<span class="unit">項目</span></div>
+        <div class="stat-label">基本パッケージ</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">24/7</div>
+        <div class="stat-label">パンク対応</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">0<span class="unit">円</span></div>
+        <div class="stat-label">保管・管理コスト</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">3<span class="unit">パターン</span></div>
+        <div class="stat-label">継続プラン</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Problem -->
+<section class="problem">
+  <div class="container">
+    <div class="section-eyebrow">WHY f.o.o pack</div>
+    <h2 class="section-title">タイヤまわりの「困った」を、ゼロに。</h2>
+    <p class="section-lead">
+      季節ごとの交換手配、保管場所の確保、突発的なパンク、見えにくいコスト。
+      運送業のタイヤ管理には、表に出にくい負担が積み重なっています。
+    </p>
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-num">01</div>
+        <h3>季節タイヤの交換・保管が手間</h3>
+        <p>夏冬の入替えで車両は止まり、保管スペースもひっ迫。事務方の段取りコストも見えづらい。</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">02</div>
+        <h3>突発的なパンクで予定が崩れる</h3>
+        <p>走行中のトラブルが出るたび、現場対応・修理手配・代替車両の調整に追われる。</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-num">03</div>
+        <h3>タイヤコストが読めない</h3>
+        <p>銘柄選定・摩耗具合・廃タイヤ処理まで、出費が散らばり予算化が難しい。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Service: 6 features -->
+<section class="services" id="service">
+  <div class="container">
+    <div class="section-eyebrow">BASIC PACKAGE</div>
+    <h2 class="section-title">サービス基本パッケージ</h2>
+    <p class="section-lead">
+      タイヤ運用に必要な6つの機能を、ワンパッケージでご提供します。
+    </p>
+    <div class="service-grid">
+
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>
+        </div>
+        <div class="service-num">01</div>
+        <h3>季節タイヤ交換</h3>
+        <p>夏タイヤ・冬タイヤ・ハイタイヤなど、シーズンごとの履き替えを計画的に実施。タイヤごとの摩耗管理もお任せください。</p>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+        </div>
+        <div class="service-num">02</div>
+        <h3>パンク対応</h3>
+        <p>連絡一つで迅速対応。走行中のトラブルでも素早く対処し、車両ダウンタイムを最小化します。</p>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div class="service-num">03</div>
+        <h3>出張対応</h3>
+        <p>走行中にトラブルがあれば現場まで駆けつけます。<span class="service-note">※エリア対応外あり</span></p>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7H4a2 2 0 00-2 2v9a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+        </div>
+        <div class="service-num">04</div>
+        <h3>タイヤ管理</h3>
+        <p>契約タイヤの在庫・保管・台帳管理は自社で抱える必要がありません。すべて当社で一元管理します。</p>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div class="service-num">05</div>
+        <h3>コスト管理</h3>
+        <p>突発的な出費や対応に追われることはありません。月額ベースで読みやすく、予算化しやすい運用に。</p>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <div class="service-num">06</div>
+        <h3>組替・脱着</h3>
+        <p>定期的な点検・ローテーション・組替・脱着まで含めて対応。タイヤを長く・安全に使い切るための整備を計画的に実施します。</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Management fee includes -->
+<section class="management" id="management">
+  <div class="container">
+    <div class="section-eyebrow">INCLUDED</div>
+    <h2 class="section-title">サービス管理料に含まれる内容</h2>
+    <p class="section-lead">
+      基本パッケージの料金には、以下のサービスも標準で含まれます。
+    </p>
+    <div class="mgmt-grid">
+      <div class="mgmt-card">
+        <div class="mgmt-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+        </div>
+        <h4>ホイール・ハブ清掃</h4>
+        <p>交換時にあわせて実施。錆や固着を防ぎ、車両寿命を伸ばします。</p>
+      </div>
+      <div class="mgmt-card">
+        <div class="mgmt-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><path d="M12 7v6M9 10h6"/></svg>
+        </div>
+        <h4>パンク修理（出張対応）</h4>
+        <p>追加費用なしで現場まで駆けつけ修理。エリアによります。</p>
+      </div>
+      <div class="mgmt-card">
+        <div class="mgmt-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h4>コスト・安全管理</h4>
+        <p>摩耗・空気圧・銘柄選定まで含めた一体管理で、安全と予算を両立。</p>
+      </div>
+      <div class="mgmt-card">
+        <div class="mgmt-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h4>タイヤ一時保管</h4>
+        <p>使わない季節のタイヤは当社倉庫でお預かり。保管スペース不要。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Add-on -->
+<section class="addon">
+  <div class="container">
+    <div class="section-eyebrow">CUSTOMIZE</div>
+    <h2 class="section-title">追加パック商品</h2>
+    <p class="section-lead">
+      基本サービスプランに、月額で組み込める追加オプションをご用意しています。
+    </p>
+    <div class="addon-card">
+      <div>
+        <h3>カスタマイズ可能な<br>オプション商品</h3>
+        <p class="lead">
+          車両特性や運用エリアに合わせて、必要なものだけを月額に組み込めます。
+          必要に応じて追加・削除が可能なので、ムダな出費が発生しません。
+        </p>
+      </div>
+      <ul class="addon-list">
+        <li>空気圧センサー</li>
+        <li>ホイール磨き</li>
+        <li>タイヤチェーン</li>
+        <li>チェーン修理</li>
+        <li>その他オプション</li>
+        <li>個別ご相談</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Lease end patterns -->
+<section class="lease" id="lease">
+  <div class="container">
+    <div class="section-eyebrow">CONTINUATION</div>
+    <h2 class="section-title">リース終了後の<br>未使用分のご利用方法</h2>
+    <p class="section-lead">
+      契約期間中にタイヤを使い切らなかった場合も、未使用分はムダにしません。
+      自社の車両状況にあわせて、3つのパターンから選べます。
+    </p>
+    <div class="lease-grid">
+      <div class="lease-card">
+        <div class="lease-pattern">PATTERN 01</div>
+        <h4>同じ車両で再契約</h4>
+        <p>未使用分に不足分をプラスし、同じ車両で次の契約期間へ継続。連続運用したい車両に最適です。</p>
+      </div>
+      <div class="lease-card">
+        <div class="lease-pattern">PATTERN 02</div>
+        <h4>他の車両（1台指定）で利用</h4>
+        <p>未使用分を、別の車両（1台指定）に振り替えて利用。車両入替時にも柔軟に対応できます。</p>
+      </div>
+      <div class="lease-card">
+        <div class="lease-pattern">PATTERN 03</div>
+        <h4>新規車両で契約</h4>
+        <p>未使用分に不足分をプラスし、新たに導入した車両で契約。導入コストを抑えながらスタートできます。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Report flow -->
+<section class="report">
+  <div class="container">
+    <div class="section-eyebrow">TRANSPARENCY</div>
+    <h2 class="section-title">作業報告書で「見える化」</h2>
+    <p class="section-lead">
+      いつ・どのタイヤを・どう交換したか。すべて作業報告書として電子保存。
+      関係者で共有しやすく、過去の履歴もすぐ確認できます。
+    </p>
+    <div class="report-flow">
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-num">1</div>
+          <h4>作業実施</h4>
+          <p>担当作業員が車両ごとに交換・点検・修理を実施します。</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">2</div>
+          <h4>報告書を作成・提出</h4>
+          <p>交換内容を作業報告書にまとめ、お客様へ即時送付します。</p>
+        </div>
+        <div class="flow-step">
+          <div class="flow-num">3</div>
+          <h4>電子保存・共有</h4>
+          <p>全履歴を電子保存。社内共有・遡及確認がいつでも可能です。</p>
+        </div>
+      </div>
+      <div class="flow-channels">
+        <div class="flow-channels-label">REPORT CHANNELS</div>
+        <div class="flow-channels-list">
+          <span class="flow-channel">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            メール
+          </span>
+          <span class="flow-channel">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            LINE
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="section-eyebrow">PRICING</div>
+    <h2 class="section-title">料金について</h2>
+    <p class="section-lead">
+      f.o.oパックライトは、車両特性・運用条件にあわせて個別にお見積もりいたします。
+    </p>
+    <div class="pricing-card">
+      <span class="pricing-eyebrow">CUSTOM QUOTE</span>
+      <h3>車両サイズ・走行ルート・<br>スタッドレス有無により<br>個別にお見積もり</h3>
+      <p>
+        運送業のタイヤ運用は、車両特性・走行距離・路面環境によって最適な銘柄・本数・交換タイミングが変わります。
+        f.o.oパックでは、お客様の運用条件を伺った上で、最適な月額プランをご提案します。
+      </p>
+      <div class="pricing-factors">
+        <span class="factor">タイヤサイズ</span>
+        <span class="factor">車両台数</span>
+        <span class="factor">走行ルート</span>
+        <span class="factor">スタッドレス有無</span>
+        <span class="factor">交換頻度</span>
+      </div>
+      <a href="#contact" class="btn btn-primary">無料見積もりを依頼する →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section class="contact" id="contact">
+  <div class="container contact-grid">
+    <div>
+      <h2>タイヤ管理の負担を、<br>お見積もりから減らしませんか。</h2>
+      <p class="contact-lead">
+        お電話・メールにて、いつでもご相談を承っております。
+        車両情報・運用条件をお伺いし、最適なプランをご提案いたします。
+      </p>
+      <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+        <a href="tel:090-7899-5191" class="btn btn-primary">代表へ電話する</a>
+        <a href="mailto:info@tiremanager-foo.com" class="btn btn-ghost">メールで相談</a>
+      </div>
+    </div>
+    <div class="contact-info">
+      <div class="contact-row">
+        <div class="contact-label">会社名</div>
+        <div class="contact-value">有限会社 タイヤマネージャー フー</div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-label">代表</div>
+        <div class="contact-value">
+          <div class="contact-tel"><a href="tel:090-7899-5191">090-7899-5191</a></div>
+        </div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-label">受付</div>
+        <div class="contact-value">
+          <div class="contact-tel"><a href="tel:080-2880-7516">080-2880-7516</a></div>
+        </div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-label">FAX</div>
+        <div class="contact-value">082-942-3731</div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-label">Mail</div>
+        <div class="contact-value"><a href="mailto:info@tiremanager-foo.com">info@tiremanager-foo.com</a></div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-label">本社</div>
+        <div class="contact-value">広島市佐伯区千同3丁目394-1<br><span style="font-size:12px;color:var(--silver-300);">五日市工場</span></div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-label">志和</div>
+        <div class="contact-value">東広島市志和町冠 172-10<br><span style="font-size:12px;color:var(--silver-300);">志和倉庫・工場</span></div>
+      </div>
+      <div class="contact-row">
+        <div class="contact-label">営業時間</div>
+        <div class="contact-value">
+          平日・土曜　6:00 〜 21:00<br>
+          <span style="font-size:12px;color:var(--silver-300);">※拡大営業期間：5/16 〜 10/15</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    © <span id="year"></span> 有限会社 タイヤマネージャー フー｜<a href="https://tiremanager-foo.com" target="_blank" rel="noopener">コーポレートサイト</a>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
