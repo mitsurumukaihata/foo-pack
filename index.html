@@ -27,7 +27,18 @@
   --gray-light: #e8e4dc; --white: #ffffff;
 }
 html { scroll-behavior: smooth; }
-body { font-family: 'Noto Sans JP', sans-serif; background: var(--cream); color: var(--navy); overflow-x: hidden; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--cream);
+  color: var(--navy);
+  overflow-x: hidden;
+  /* 日本語の文中改行を抑制 (単語途中で切れないように) */
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  line-break: strict;
+}
+/* 数字・英字が連続したフレーズは折返し可、日本語は単語単位 */
+h1, h2, h3, h4, h5, p, span, a, li, div { word-break: keep-all; overflow-wrap: break-word; line-break: strict; }
 
 /* NAV */
 nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 18px 40px; background: rgba(13,31,60,0.97); backdrop-filter: blur(10px); }
@@ -293,10 +304,26 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; a
 .addon-text { font-size: 15px; line-height: 2.05; color: rgba(255,255,255,0.65); font-weight: 300; }
 .addon-text p + p { margin-top: 1.4em; }
 .addon-list { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(255,255,255,0.08); }
-.addon-item { background: var(--navy); padding: 22px 24px; display: flex; align-items: center; gap: 14px; transition: background 0.2s; }
+.addon-item { background: var(--navy); padding: 24px 22px; display: flex; align-items: center; gap: 16px; transition: background 0.2s; }
 .addon-item:hover { background: var(--navy-mid); }
-.addon-item-num { font-family: 'Bebas Neue', sans-serif; font-size: 13px; color: var(--orange-light); letter-spacing: 0.1em; min-width: 30px; }
-.addon-item-name { font-size: 14px; color: rgba(255,255,255,0.85); font-weight: 500; }
+.addon-item:hover .addon-item-icon { background: rgba(232,96,10,0.18); color: var(--orange-light); border-color: rgba(232,96,10,0.5); }
+.addon-item-icon {
+  width: 44px; height: 44px; flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--orange-light);
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+  background: rgba(255,255,255,0.03);
+}
+.addon-item-icon svg { width: 22px; height: 22px; stroke-width: 1.8; }
+.addon-item-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.addon-item-num { font-family: 'Bebas Neue', sans-serif; font-size: 11px; color: rgba(245,160,90,0.7); letter-spacing: 0.18em; }
+.addon-item-name { font-size: 14px; color: rgba(255,255,255,0.9); font-weight: 500; line-height: 1.4; }
+@media (max-width: 480px) {
+  .addon-list { grid-template-columns: 1fr; }
+  .addon-item { padding: 18px 18px; }
+}
 @media (max-width: 900px) { .addon-inner { grid-template-columns: 1fr; gap: 40px; } }
 
 /* FLOW (作業報告書) */
@@ -643,12 +670,60 @@ footer { background: #07101e; padding: 36px 40px; display: flex; justify-content
         <p>必要に応じて追加・削除が可能なため、使わないオプションに費用を払い続ける構造にはなりません。</p>
       </div>
       <div class="addon-list" data-anim data-d="4">
-        <div class="addon-item"><span class="addon-item-num">01</span><span class="addon-item-name">空気圧センサー</span></div>
-        <div class="addon-item"><span class="addon-item-num">02</span><span class="addon-item-name">ホイール磨き</span></div>
-        <div class="addon-item"><span class="addon-item-num">03</span><span class="addon-item-name">タイヤチェーン</span></div>
-        <div class="addon-item"><span class="addon-item-num">04</span><span class="addon-item-name">チェーン修理</span></div>
-        <div class="addon-item"><span class="addon-item-num">05</span><span class="addon-item-name">スタッドレス追加</span></div>
-        <div class="addon-item"><span class="addon-item-num">06</span><span class="addon-item-name">個別ご相談</span></div>
+        <div class="addon-item">
+          <div class="addon-item-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0118 0"/><path d="M12 12l4-4"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/><path d="M5 19h14"/></svg>
+          </div>
+          <div class="addon-item-body">
+            <span class="addon-item-num">01</span>
+            <span class="addon-item-name">空気圧センサー</span>
+          </div>
+        </div>
+        <div class="addon-item">
+          <div class="addon-item-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.5 5 5.5.8-4 3.9.9 5.5L12 14.5 7.1 17.2 8 11.7 4 7.8l5.5-.8z"/></svg>
+          </div>
+          <div class="addon-item-body">
+            <span class="addon-item-num">02</span>
+            <span class="addon-item-name">ホイール磨き</span>
+          </div>
+        </div>
+        <div class="addon-item">
+          <div class="addon-item-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11a4 4 0 014-4l2-2a3 3 0 014.2 4.2l-2 2a4 4 0 01-4 4"/><path d="M15 13a4 4 0 01-4 4l-2 2a3 3 0 01-4.2-4.2l2-2a4 4 0 014-4"/></svg>
+          </div>
+          <div class="addon-item-body">
+            <span class="addon-item-num">03</span>
+            <span class="addon-item-name">タイヤチェーン</span>
+          </div>
+        </div>
+        <div class="addon-item">
+          <div class="addon-item-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
+          </div>
+          <div class="addon-item-body">
+            <span class="addon-item-num">04</span>
+            <span class="addon-item-name">チェーン修理</span>
+          </div>
+        </div>
+        <div class="addon-item">
+          <div class="addon-item-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="19.1" y2="19.1"/><line x1="19.1" y1="4.9" x2="4.9" y2="19.1"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>
+          </div>
+          <div class="addon-item-body">
+            <span class="addon-item-num">05</span>
+            <span class="addon-item-name">スタッドレス追加</span>
+          </div>
+        </div>
+        <div class="addon-item">
+          <div class="addon-item-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+          </div>
+          <div class="addon-item-body">
+            <span class="addon-item-num">06</span>
+            <span class="addon-item-name">個別ご相談</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
