@@ -277,28 +277,6 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; a
 }
 .lease-card:hover .lease-illust { background: #0a172e; }
 .lease-card:hover .lease-illust img { filter: brightness(0.92); }
-/* パターン03 用 日本語ラベルオーバーレイ (英語を完全に覆い隠す) */
-.lease-illust .ja-label {
-  position: absolute;
-  font-size: clamp(11px, 1.1vw, 13px);
-  font-weight: 700;
-  color: var(--navy);
-  letter-spacing: 0.06em;
-  background: var(--cream);
-  padding: 4px 12px;
-  white-space: nowrap;
-  transition: background 0.25s, color 0.25s;
-  font-family: 'Noto Sans JP', sans-serif;
-  transform: translate(-50%, -50%);
-  z-index: 2;
-  border-radius: 2px;
-  box-shadow: 0 0 0 6px var(--cream);
-}
-.lease-card:hover .lease-illust .ja-label {
-  background: var(--orange);
-  color: var(--white);
-  box-shadow: 0 0 0 6px #0a172e;
-}
 @media (max-width: 900px) {
   .lease-illust { aspect-ratio: 16 / 7; }
 }
@@ -715,9 +693,6 @@ footer { background: #07101e; padding: 36px 40px; display: flex; justify-content
       <div class="lease-card" data-anim data-d="5">
         <div class="lease-illust">
           <img src="images/lease-03.png" alt="新規車両で契約 - 未使用分に不足分を足して新車に装着" loading="lazy">
-          <!-- 英語ラベル (REMAINING / ADDITIONAL) を日本語に上書き -->
-          <span class="ja-label" style="left: 42%; top: 68%;">残り分</span>
-          <span class="ja-label" style="left: 60%; top: 68%;">追加分</span>
         </div>
         <div class="lease-body">
           <div class="lease-pat">PATTERN 03</div>
