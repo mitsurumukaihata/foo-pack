@@ -260,25 +260,41 @@ nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; a
 .lease-card:hover .lease-illust .ln-spark { fill: var(--orange-light); }
 .lease-card:hover .lease-illust .ln-label { fill: rgba(255,255,255,0.45); }
 .lease-illust {
-  background: rgba(13,31,60,0.03);
-  padding: 36px 24px 28px;
-  border-bottom: 1px solid rgba(13,31,60,0.06);
+  background: var(--cream);
+  position: relative;
   display: flex; align-items: center; justify-content: center;
+  transition: background 0.25s, filter 0.25s;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+.lease-illust img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  transition: opacity 0.25s, filter 0.25s;
+}
+.lease-card:hover .lease-illust { background: #0a172e; }
+.lease-card:hover .lease-illust img { filter: brightness(0.85) contrast(1.05); }
+/* パターン03 用 日本語ラベルオーバーレイ */
+.lease-illust .ja-label {
+  position: absolute;
+  font-size: clamp(9px, 0.95vw, 12px);
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: 0.06em;
+  background: var(--cream);
+  padding: 2px 8px;
+  white-space: nowrap;
+  transition: background 0.25s, color 0.25s;
+  font-family: 'Noto Sans JP', sans-serif;
+}
+.lease-card:hover .lease-illust .ja-label { background: var(--orange); color: var(--white); }
+/* ラベル覆い隠し用の白帯 (英語テキストを隠す) */
+.lease-illust .ja-cover {
+  position: absolute;
+  background: var(--cream);
   transition: background 0.25s;
-  min-height: 200px;
 }
-.lease-illust svg {
-  width: 100%; max-width: 280px; height: auto;
-}
-.lease-illust .ln-truck { stroke: var(--navy); stroke-width: 1.8; fill: none; transition: stroke 0.25s; }
-.lease-illust .ln-truck-new { stroke: var(--orange); stroke-width: 2; fill: none; transition: stroke 0.25s; }
-.lease-illust .ln-wheel { fill: var(--orange); }
-.lease-illust .ln-arrow { stroke: var(--orange); stroke-width: 2; fill: none; transition: stroke 0.25s; }
-.lease-illust .ln-arrow-head { fill: var(--orange); transition: fill 0.25s; }
-.lease-illust .ln-bg { fill: rgba(13,31,60,0.05); transition: fill 0.25s; }
-.lease-illust .ln-spark { fill: var(--orange); transition: fill 0.25s; }
-.lease-illust .ln-label { fill: var(--gray-text); font-family: 'Bebas Neue', sans-serif; font-size: 9px; letter-spacing: 0.2em; transition: fill 0.25s; }
-.lease-card:hover .lease-illust .ln-arrow-head { fill: var(--orange-light); }
+.lease-card:hover .lease-illust .ja-cover { background: #0a172e; }
 .lease-body { padding: 32px 32px 40px; }
 .lease-pat { font-family: 'Bebas Neue', sans-serif; font-size: 13px; letter-spacing: 0.2em; color: var(--orange); margin-bottom: 14px; transition: color 0.25s; display: flex; align-items: center; gap: 10px; }
 .lease-pat::before { content: ''; width: 18px; height: 1px; background: currentColor; }
@@ -669,27 +685,7 @@ footer { background: #07101e; padding: 36px 40px; display: flex; justify-content
 
       <div class="lease-card" data-anim data-d="3">
         <div class="lease-illust">
-          <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
-            <!-- Pattern 01: 同じトラックに戻る (循環矢印) -->
-            <!-- 循環矢印 (背景) -->
-            <path d="M 140 28 A 56 56 0 1 1 84 80" class="ln-arrow"/>
-            <path d="M 140 28 A 56 56 0 0 1 196 80" class="ln-arrow"/>
-            <polygon points="196,80 188,68 204,68" class="ln-arrow-head"/>
-            <!-- トラック (中央) -->
-            <g transform="translate(80,82)">
-              <!-- 荷台 -->
-              <rect x="0" y="0" width="60" height="30" class="ln-truck"/>
-              <!-- キャブ -->
-              <path d="M 60 8 L 78 8 L 84 18 L 84 30 L 60 30 Z" class="ln-truck"/>
-              <line x1="68" y1="14" x2="78" y2="14" class="ln-truck"/>
-              <!-- タイヤ (オレンジ強調) -->
-              <circle cx="14" cy="34" r="5" class="ln-wheel"/>
-              <circle cx="48" cy="34" r="5" class="ln-wheel"/>
-              <circle cx="74" cy="34" r="5" class="ln-wheel"/>
-            </g>
-            <!-- ラベル -->
-            <text x="140" y="158" text-anchor="middle" class="ln-label">SAME VEHICLE</text>
-          </svg>
+          <img src="images/lease-01.png" alt="同じ車両で再契約 - 同じトラックに新しいタイヤを履いて次の契約期間へ" loading="lazy">
         </div>
         <div class="lease-body">
           <div class="lease-pat">PATTERN 01</div>
@@ -700,35 +696,7 @@ footer { background: #07101e; padding: 36px 40px; display: flex; justify-content
 
       <div class="lease-card" data-anim data-d="4">
         <div class="lease-illust">
-          <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
-            <!-- Pattern 02: 他の車両 (1台指定) へ移動 -->
-            <!-- トラックA (左) -->
-            <g transform="translate(20,52)">
-              <rect x="0" y="0" width="50" height="26" class="ln-truck"/>
-              <path d="M 50 6 L 66 6 L 72 16 L 72 26 L 50 26 Z" class="ln-truck"/>
-              <line x1="57" y1="12" x2="66" y2="12" class="ln-truck"/>
-              <circle cx="12" cy="30" r="4" class="ln-wheel"/>
-              <circle cx="40" cy="30" r="4" class="ln-wheel"/>
-              <circle cx="63" cy="30" r="4" class="ln-wheel"/>
-            </g>
-            <text x="58" y="100" text-anchor="middle" class="ln-label">FROM</text>
-            <!-- 矢印 (タイヤが移動) -->
-            <line x1="100" y1="65" x2="170" y2="65" class="ln-arrow"/>
-            <polygon points="170,65 162,60 162,70" class="ln-arrow-head"/>
-            <!-- 移動するタイヤ -->
-            <circle cx="135" cy="55" r="5" class="ln-wheel"/>
-            <!-- トラックB (右) -->
-            <g transform="translate(188,52)">
-              <rect x="0" y="0" width="50" height="26" class="ln-truck"/>
-              <path d="M 50 6 L 66 6 L 72 16 L 72 26 L 50 26 Z" class="ln-truck"/>
-              <line x1="57" y1="12" x2="66" y2="12" class="ln-truck"/>
-              <circle cx="12" cy="30" r="4" class="ln-wheel"/>
-              <circle cx="40" cy="30" r="4" class="ln-wheel"/>
-              <circle cx="63" cy="30" r="4" class="ln-wheel"/>
-            </g>
-            <text x="226" y="100" text-anchor="middle" class="ln-label">TO (1 UNIT)</text>
-            <text x="140" y="142" text-anchor="middle" class="ln-label">TRANSFER TIRES</text>
-          </svg>
+          <img src="images/lease-02.png" alt="他の車両で利用 - 指定した別の車両にタイヤを振り替え" loading="lazy">
         </div>
         <div class="lease-body">
           <div class="lease-pat">PATTERN 02</div>
@@ -739,39 +707,12 @@ footer { background: #07101e; padding: 36px 40px; display: flex; justify-content
 
       <div class="lease-card" data-anim data-d="5">
         <div class="lease-illust">
-          <svg viewBox="0 0 280 160" xmlns="http://www.w3.org/2000/svg">
-            <!-- Pattern 03: 新規車両で契約 -->
-            <!-- 旧トラック (うっすら、左) -->
-            <g transform="translate(20,52)" opacity="0.4">
-              <rect x="0" y="0" width="44" height="22" class="ln-truck"/>
-              <path d="M 44 5 L 58 5 L 63 14 L 63 22 L 44 22 Z" class="ln-truck"/>
-              <circle cx="10" cy="26" r="3.5" class="ln-wheel"/>
-              <circle cx="36" cy="26" r="3.5" class="ln-wheel"/>
-              <circle cx="56" cy="26" r="3.5" class="ln-wheel"/>
-            </g>
-            <text x="51" y="98" text-anchor="middle" class="ln-label" style="opacity:0.5;">PREVIOUS</text>
-            <!-- 矢印 -->
-            <line x1="100" y1="62" x2="160" y2="62" class="ln-arrow"/>
-            <polygon points="160,62 152,57 152,67" class="ln-arrow-head"/>
-            <!-- 新規トラック (ハイライト、右) -->
-            <g transform="translate(180,46)">
-              <rect x="0" y="0" width="56" height="30" class="ln-truck-new"/>
-              <path d="M 56 7 L 74 7 L 80 18 L 80 30 L 56 30 Z" class="ln-truck-new"/>
-              <line x1="64" y1="13" x2="74" y2="13" class="ln-truck-new"/>
-              <circle cx="13" cy="34" r="5" class="ln-wheel"/>
-              <circle cx="44" cy="34" r="5" class="ln-wheel"/>
-              <circle cx="70" cy="34" r="5" class="ln-wheel"/>
-            </g>
-            <!-- NEW スパーク -->
-            <g transform="translate(178,42)">
-              <path d="M 0 0 L 2 -6 L 4 0 L 10 2 L 4 4 L 2 10 L 0 4 L -6 2 Z" class="ln-spark"/>
-            </g>
-            <g transform="translate(248,72)">
-              <path d="M 0 0 L 1.5 -4 L 3 0 L 7 1.5 L 3 3 L 1.5 7 L 0 3 L -4 1.5 Z" class="ln-spark"/>
-            </g>
-            <text x="220" y="102" text-anchor="middle" class="ln-label" style="fill:var(--orange);">NEW VEHICLE</text>
-            <text x="140" y="142" text-anchor="middle" class="ln-label">FRESH START</text>
-          </svg>
+          <img src="images/lease-03.png" alt="新規車両で契約 - 未使用分に不足分を足して新車に装着" loading="lazy">
+          <!-- 英語ラベル (REMAINING / ADDITIONAL) を日本語に上書き -->
+          <span class="ja-cover" style="left: 35%; top: 60%; width: 14%; height: 8%;"></span>
+          <span class="ja-cover" style="left: 53%; top: 60%; width: 14%; height: 8%;"></span>
+          <span class="ja-label" style="left: 35%; top: 60%; transform: translateX(0);">残り分</span>
+          <span class="ja-label" style="left: 53%; top: 60%; transform: translateX(0);">追加分</span>
         </div>
         <div class="lease-body">
           <div class="lease-pat">PATTERN 03</div>
