@@ -1,0 +1,4 @@
+# f.o.oパックの専用ページは使わない（向畑 2026/10/2）。新しい会社HPの紹介ページへ一時転送する。
+# 新しいHPを本番（tiremanager-foo.com）に切り替えたら、転送先を https://tiremanager-foo.com/foopack/ に替える。
+# 転送先が変わるので 302（一時的）にしてある＝ブラウザに覚え込ませない
+/*  https://preview.tiremanager-foo.com/foopack/  302
