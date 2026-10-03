@@ -1,7 +1,7 @@
 // foopack.tiremanager-foo.com で、新しい会社HPの f.o.oパック紹介ページをそのまま見せる中継（向畑 2026/10/3「新HPを公表する前に f.o.oパックのページを公表したい」）
 //
 // ・中身は新HP（Cloudflare Pages の foo-hp）の /foopack/ をその場で取ってくる＝新HPを `node deploy.mjs` で出せば、ここも同じになる（ここは直さなくてよい）
-// ・ページの中の「会社情報」「お知らせ」などのリンクは、新HPの公表までは今の会社HP（さくらの旧HP）へ向け直す（準備中の新HPを見せない）
+// ・新HPの公表までは、f.o.oパックのページだけで完結させる＝上のメニューはページの中の欄へ、ほかのページへは飛ばさない（下の LINKS・pageNav）
 // ・専用の住所では検索に載せる（正規の住所＝ https://foopack.tiremanager-foo.com/ ）
 // ・新HPに切り替えたら SWITCHED を true にして push する → どのアドレスも tiremanager-foo.com/foopack/ へ 301 で移る（配ったリンク・QRはそのまま使える）
 const SWITCHED = false;
@@ -20,16 +20,29 @@ const PASS = [
   /^\/favicon-(16|32)\.png$/, /^\/apple-touch-icon\.png$/, /^\/icon-(192|512)\.png$/, /^\/manifest\.json$/,
   /^\/og-image\.(jpg|png)$/, /^\/privacy\/?$/, /^\/terms\/?$/,
 ];
-// ページの中のリンクの向け先（新HPの公表まで）
+// ほかのページへ飛ばない（向畑 2026/10/3「旧HPとのバランスが悪すぎるから、fooパック紹介ページだけにしよう。ほかのページに飛ばないように。まだ新HPは出来そうにない」）
+// ＝上のメニューはページの中の各欄へ移るだけ。ロゴ・パンくずも外へ出さない。プライバシーポリシー・利用規約（問い合わせに要る）だけは同じデザインで出し、メニューは「戻る」だけ
+// （その前は 会社情報・お知らせ などを旧HPへ向けていた）
 const LINKS = {
-  '/': OLD_HP + '/',
-  '/#pillars': OLD_HP + '/',
-  '/#locations': OLD_HP + '/company.php',
-  '/company/': OLD_HP + '/company.php',
-  '/news/': OLD_HP + '/',                    // 旧HPのお知らせ（新着情報）はトップにある
-  '/#contact': SELF + '/#contact',           // お問い合わせは f.o.oパックのページのフォームへ
-  'https://tiremanager-foo.com/foopack/': SELF + '/',
+  '/': '/',
+  '/#pillars': '/#mechanism',
+  '/#locations': '/#contact',
+  '/company/': '/',
+  '/news/': '/',
+  '/#contact': '/#contact',                  // お問い合わせは f.o.oパックのページのフォームへ
+  'https://tiremanager-foo.com/foopack/': '/',
 };
+// f.o.oパックのページの上のメニュー（ページの中の欄へ）。お客様の声はページにあるときだけ出す
+function pageNav(hasVoice) {
+  const items = [['#mechanism', 'しくみ'], ['#included', '月額に含まれるもの'], ...(hasVoice ? [['#voice', 'お客様の声']] : []), ['#simulator', 'かんたん見積もり'], ['#faq', 'よくあるご質問'], ['#contact', 'お問い合わせ']];
+  return items.map(([h, t]) => `<li><a href="${h}">${t}</a></li>`).join('');
+}
+const BACK_NAV = '<li><a href="/">f.o.oパックのページへ戻る</a></li><li><a href="/#contact">お問い合わせ</a></li>';
+class SetInner {
+  constructor(html) { this.html = html; }
+  element(el) { el.setInnerContent(this.html, { html: true }); }
+}
+class Remove { element(el) { el.remove(); } }
 
 function assetBaseFor(origin) { return origin === NEW_HP ? NEW_HP_PUBLIC : NEW_HP_DRAFT; }
 function originFor(host) {
@@ -41,8 +54,8 @@ class Href {
     const h = el.getAttribute('href');
     if (h == null) return;
     if (Object.prototype.hasOwnProperty.call(LINKS, h)) { el.setAttribute('href', LINKS[h]); return; }
-    // 中継しない新HPのページへのリンク（/recruit/ など今後増えたもの）は今の会社HPのトップへ
-    if (h.startsWith('/') && !h.startsWith('//') && !PASS.some(re => re.test(h.split(/[?#]/)[0]))) el.setAttribute('href', OLD_HP + '/');
+    // 中継しない新HPのページへのリンク（今後増えたもの）は、f.o.oパックのページへ（ほかのページへ飛ばさない）
+    if (h.startsWith('/') && !h.startsWith('//') && !PASS.some(re => re.test(h.split(/[?#]/)[0]))) el.setAttribute('href', '/');
   }
 }
 class Attr {
@@ -86,8 +99,11 @@ async function fetchOrigin(origin, path, request, conditional = true) {
   try { return await go(); } catch (e) { return await go(); }   // 取り損ねたら1回だけ取り直す（だめなら onRequest が新HPへ回す）
 }
 
-function rewritePage(res, isFoopack, base) {
+function rewritePage(res, isFoopack, base, hasVoice = false) {
   let rw = new HTMLRewriter().on('a[href]', new Href())
+    // ほかのページへ飛ばない: 上のメニューを差し替える（f.o.oパックのページ＝ページの中の欄へ／プライバシーポリシー等＝戻るだけ）
+    .on('header nav ul', new SetInner(isFoopack ? pageNav(hasVoice) : BACK_NAV))
+    .on(isFoopack ? '.crumbs' : 'x-none', new Remove())
     .on('link[rel="stylesheet"]', new Asset('href', base))
     .on('link[rel="icon"]', new Asset('href', base))
     .on('link[rel="apple-touch-icon"]', new Asset('href', base))
@@ -105,7 +121,7 @@ function rewritePage(res, isFoopack, base) {
       .on('script[type="application/ld+json"]', new JsonLd());
   }
   const h = new Headers(res.headers);
-  h.delete('content-length'); h.delete('x-robots-tag'); h.delete('etag'); h.delete('last-modified');   // 書き換えた中身なので、元の目印は付けない
+  h.delete('content-length'); h.delete('content-encoding'); h.delete('x-robots-tag'); h.delete('etag'); h.delete('last-modified');   // 書き換えた中身なので、元の目印は付けない
   h.set('cache-control', 'public, max-age=0, must-revalidate');
   return rw.transform(new Response(res.body, { status: res.status, headers: h }));
 }
@@ -149,7 +165,8 @@ async function handle({ request }) {
   if (path === '/') {
     const res = await fetchOrigin(origin, '/foopack/' + url.search, request, false);
     if (res.status !== 200) return Response.redirect(base + '/foopack/' + url.search, 302);   // 取れなかったら新HPの同じページへ
-    return rewritePage(res, true, base);
+    const html = await res.text();
+    return rewritePage(new Response(html, { status: 200, headers: res.headers }), true, base, html.includes('id="voice"'));
   }
   // ホーム画面に追加したときの設定は、この住所の / を開くように
   if (path === '/foopack/manifest.json') {
@@ -185,6 +202,6 @@ async function handle({ request }) {
     const h = new Headers(res.headers); h.delete('x-robots-tag');
     return new Response(res.body, { status: res.status, headers: h });
   }
-  // それ以外（新HPのトップ・会社情報など）は、新HPの公表まで今の会社HPへ
-  return Response.redirect(OLD_HP + '/', 302);
+  // それ以外（新HPのトップ・会社情報など）は、新HPの公表まで f.o.oパックのページへ（ほかのページへ飛ばさない）
+  return Response.redirect(url.origin + '/', 302);
 }
