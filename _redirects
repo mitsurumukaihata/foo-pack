@@ -1,5 +1,3 @@
-# f.o.oパックの専用ページは使わない（向畑 2026/10/2）。新しい会社HPの紹介ページへ転送する。
-# 転送先は本番の住所 tiremanager-foo.com/foopack/（2026/10/2 向畑「本番用にURLを変えて」）。
-# 新しいHPを本番に切り替えるまでは、さくら（古いHP）の www/foopack/index.php が preview.tiremanager-foo.com/foopack/ へ一時転送している。
-# 切り替えたあとは、ここは何も直さなくてよい。302（一時的）のままにしてある＝ブラウザに覚え込ませない
-/*  https://tiremanager-foo.com/foopack/  302
+# 転送はやめた（2026/10/3）。foopack.tiremanager-foo.com では functions/_middleware.js が
+# 新しい会社HPの f.o.oパック紹介ページを中継して見せる（向畑「新HPを公表する前に f.o.oパックのページを公表したい」）。
+# 新HPに切り替えたら _middleware.js の SWITCHED を true にする（ここは触らなくてよい）。
