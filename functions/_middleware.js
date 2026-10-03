@@ -10,6 +10,9 @@ const SELF = 'https://foopack.tiremanager-foo.com';
 const OLD_HP = 'https://tiremanager-foo.com';
 const NEW_HP = 'https://foo-hp.pages.dev';                        // 新HPの本番
 const NEW_HP_DRAFT = 'https://foopack-draft.foo-hp.pages.dev';    // 新HPの確認用（この中継の確認用の住所 *.foo-pack.pages.dev ではこちらを見せる）
+const NEW_HP_PUBLIC = 'https://preview.tiremanager-foo.com';      // 新HPの本番を会社の住所で（見た目・スクリプト・画像・動画はここから直接読ませる）
+// 2026/10/3 向畑さんの画面で style.css が効かず崩れて見えた（再現せず＝中継が取り損ねた一瞬と見ている）。
+// 中継を通すのはページ本体だけにして、部品はブラウザが新HPから直接読むようにした。取り損ねたら1回取り直し、だめなら新HPへ回す
 
 // 新HPから中継してよいもの（ページの部品・プライバシーポリシー・利用規約）。これ以外は今の会社HPへ移す
 const PASS = [
@@ -28,6 +31,7 @@ const LINKS = {
   'https://tiremanager-foo.com/foopack/': SELF + '/',
 };
 
+function assetBaseFor(origin) { return origin === NEW_HP ? NEW_HP_PUBLIC : NEW_HP_DRAFT; }
 function originFor(host) {
   return (host === 'foopack.tiremanager-foo.com' || host === 'foo-pack.pages.dev') ? NEW_HP : NEW_HP_DRAFT;
 }
@@ -45,13 +49,15 @@ class Attr {
   constructor(name, value) { this.name = name; this.value = value; }
   element(el) { el.setAttribute(this.name, this.value); }
 }
-// 新HPでは /foopack/ に置かれたページなので、相対の書き方（例: 紹介動画の video/poster.jpg）は /foopack/ の下を指す。
-// ここでは / に出すので、そのままだと /video/… を読みに行ってずれる → /foopack/ を前に付ける（2026/10/3）
-class RelSrc {
-  constructor(name) { this.name = name; }
+// 部品（見た目・スクリプト・画像・動画）は新HPから直接読ませる。
+// 新HPでは /foopack/ に置かれたページなので、相対の書き方（例: 紹介動画の video/poster.jpg）は /foopack/ の下を指す（2026/10/3）
+class Asset {
+  constructor(name, base) { this.name = name; this.base = base; }
   element(el) {
-    const v = el.getAttribute(this.name);
-    if (v && !/^(\/|#|[a-z][a-z0-9+.-]*:)/i.test(v)) el.setAttribute(this.name, '/foopack/' + v);
+    let v = el.getAttribute(this.name);
+    if (!v || /^(#|\/\/|[a-z][a-z0-9+.-]*:)/i.test(v)) return;
+    if (!v.startsWith('/')) v = '/foopack/' + v;
+    el.setAttribute(this.name, this.base + v);
   }
 }
 // 構造化データ（JSON-LD）の中の住所を書き換える（文字が細切れで届くので、ためてから1回で入れ直す）
@@ -72,24 +78,31 @@ async function fetchOrigin(origin, path, request, conditional = true) {
   // 紹介動画（/foopack/video/）は「途中から読む」要求（Range）で読まれる＝そのまま渡し、206 もそのまま返す（iPhone の Safari は 206 が無いと再生しない）
   // 書き換えて出すもの（ページ本体・manifest）には conditional=false＝「前と同じなら送らない」(304) を渡さない
   for (const k of conditional ? ['Range', 'If-Range', 'If-None-Match', 'If-Modified-Since'] : []) { const v = request.headers.get(k); if (v) headers[k] = v; }
-  return fetch(origin + path, {
+  const go = () => fetch(origin + path, {
     method: request.method === 'HEAD' ? 'HEAD' : 'GET',
     headers,
     redirect: 'manual',
   });
+  try { return await go(); } catch (e) { return await go(); }   // 取り損ねたら1回だけ取り直す（だめなら onRequest が新HPへ回す）
 }
 
-function rewritePage(res, isFoopack) {
-  let rw = new HTMLRewriter().on('a[href]', new Href());
+function rewritePage(res, isFoopack, base) {
+  let rw = new HTMLRewriter().on('a[href]', new Href())
+    .on('link[rel="stylesheet"]', new Asset('href', base))
+    .on('link[rel="icon"]', new Asset('href', base))
+    .on('link[rel="apple-touch-icon"]', new Asset('href', base))
+    .on('script[src]', new Asset('src', base))
+    .on('img[src]', new Asset('src', base))
+    .on('source[src]', new Asset('src', base))
+    .on('video[src]', new Asset('src', base))
+    .on('video[poster]', new Asset('poster', base));
   if (isFoopack) {
     rw = rw
       .on('link[rel="canonical"]', new Attr('href', SELF + '/'))
       .on('meta[property="og:url"]', new Attr('content', SELF + '/'))
       .on('meta[property="og:image"]', new Attr('content', SELF + '/og-image.jpg'))
       .on('meta[name="twitter:image"]', new Attr('content', SELF + '/og-image.jpg'))
-      .on('script[type="application/ld+json"]', new JsonLd())
-      .on('[src]', new RelSrc('src'))
-      .on('video[poster]', new RelSrc('poster'));
+      .on('script[type="application/ld+json"]', new JsonLd());
   }
   const h = new Headers(res.headers);
   h.delete('content-length'); h.delete('x-robots-tag'); h.delete('etag'); h.delete('last-modified');   // 書き換えた中身なので、元の目印は付けない
@@ -97,7 +110,19 @@ function rewritePage(res, isFoopack) {
   return rw.transform(new Response(res.body, { status: res.status, headers: h }));
 }
 
-export async function onRequest({ request }) {
+// 中継が新HPから取り損ねても、お客様には新HPの同じページ・部品を見せる（崩れた画面やエラーを出さない）
+export async function onRequest(ctx) {
+  try {
+    return await handle(ctx);
+  } catch (e) {
+    const url = new URL(ctx.request.url);
+    const base = assetBaseFor(originFor(url.hostname));
+    const to = url.pathname === '/' ? '/foopack/' : url.pathname.startsWith('/video/') ? '/foopack' + url.pathname : url.pathname;
+    return Response.redirect(base + to + url.search, 302);
+  }
+}
+
+async function handle({ request }) {
   const url = new URL(request.url);
   const path = url.pathname;
 
@@ -108,6 +133,7 @@ export async function onRequest({ request }) {
   if (request.method !== 'GET' && request.method !== 'HEAD') return new Response('Method Not Allowed', { status: 405 });
 
   const origin = originFor(url.hostname);
+  const base = assetBaseFor(origin);
 
   // 住所は1つに（/foopack/ で来たら / へ）
   if (path === '/foopack' || path === '/foopack/' || path === '/foopack/index.html' || path === '/index.html') {
@@ -122,8 +148,8 @@ export async function onRequest({ request }) {
   // f.o.oパックのページ本体
   if (path === '/') {
     const res = await fetchOrigin(origin, '/foopack/' + url.search, request, false);
-    if (res.status !== 200) return new Response('ただいま表示できません。時間をおいてもう一度お試しください。', { status: 502, headers: { 'content-type': 'text/plain; charset=utf-8' } });
-    return rewritePage(res, true);
+    if (res.status !== 200) return Response.redirect(base + '/foopack/' + url.search, 302);   // 取れなかったら新HPの同じページへ
+    return rewritePage(res, true, base);
   }
   // ホーム画面に追加したときの設定は、この住所の / を開くように
   if (path === '/foopack/manifest.json') {
@@ -154,7 +180,8 @@ export async function onRequest({ request }) {
       return Response.redirect(url.origin + u.pathname + u.search, res.status === 301 || res.status === 308 ? 301 : 302);
     }
     const ct = res.headers.get('content-type') || '';
-    if (ct.includes('text/html')) return rewritePage(res, false);
+    if (ct.includes('text/html')) return rewritePage(res, false, base);
+    if (res.status >= 500) return Response.redirect(base + path + url.search, 302);   // 新HP側の一時的なエラーは新HPへ回す
     const h = new Headers(res.headers); h.delete('x-robots-tag');
     return new Response(res.body, { status: res.status, headers: h });
   }
