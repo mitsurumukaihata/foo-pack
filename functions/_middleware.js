@@ -122,6 +122,12 @@ export async function onRequest({ request }) {
     j.id = '/'; j.start_url = '/'; j.scope = '/';
     return new Response(JSON.stringify(j, null, 2), { headers: { 'content-type': 'application/manifest+json; charset=utf-8', 'cache-control': 'public, max-age=0, must-revalidate' } });
   }
+  // ブラウザが自動で読みに行くアイコン。新HPには favicon.ico が無いので png を返す（旧HPのトップへ転送すると画像として読めず止められる）
+  if (path === '/favicon.ico') {
+    const res = await fetchOrigin(origin, '/favicon-32.png', request, false);
+    if (res.status !== 200) return new Response(null, { status: 404 });
+    return new Response(res.body, { headers: { 'content-type': 'image/png', 'cache-control': 'public, max-age=86400' } });
+  }
   if (PASS.some(re => re.test(path))) {
     const res = await fetchOrigin(origin, path + url.search, request);
     if (res.status >= 300 && res.status < 400) {
