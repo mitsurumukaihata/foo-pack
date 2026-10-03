@@ -45,6 +45,15 @@ class Attr {
   constructor(name, value) { this.name = name; this.value = value; }
   element(el) { el.setAttribute(this.name, this.value); }
 }
+// 新HPでは /foopack/ に置かれたページなので、相対の書き方（例: 紹介動画の video/poster.jpg）は /foopack/ の下を指す。
+// ここでは / に出すので、そのままだと /video/… を読みに行ってずれる → /foopack/ を前に付ける（2026/10/3）
+class RelSrc {
+  constructor(name) { this.name = name; }
+  element(el) {
+    const v = el.getAttribute(this.name);
+    if (v && !/^(\/|#|[a-z][a-z0-9+.-]*:)/i.test(v)) el.setAttribute(this.name, '/foopack/' + v);
+  }
+}
 // 構造化データ（JSON-LD）の中の住所を書き換える（文字が細切れで届くので、ためてから1回で入れ直す）
 class JsonLd {
   constructor() { this.buf = ''; }
@@ -78,7 +87,9 @@ function rewritePage(res, isFoopack) {
       .on('meta[property="og:url"]', new Attr('content', SELF + '/'))
       .on('meta[property="og:image"]', new Attr('content', SELF + '/og-image.jpg'))
       .on('meta[name="twitter:image"]', new Attr('content', SELF + '/og-image.jpg'))
-      .on('script[type="application/ld+json"]', new JsonLd());
+      .on('script[type="application/ld+json"]', new JsonLd())
+      .on('[src]', new RelSrc('src'))
+      .on('video[poster]', new RelSrc('poster'));
   }
   const h = new Headers(res.headers);
   h.delete('content-length'); h.delete('x-robots-tag'); h.delete('etag'); h.delete('last-modified');   // 書き換えた中身なので、元の目印は付けない
@@ -121,6 +132,12 @@ export async function onRequest({ request }) {
     const j = await res.json();
     j.id = '/'; j.start_url = '/'; j.scope = '/';
     return new Response(JSON.stringify(j, null, 2), { headers: { 'content-type': 'application/manifest+json; charset=utf-8', 'cache-control': 'public, max-age=0, must-revalidate' } });
+  }
+  // 相対の書き方で /video/… を聞かれたとき（スクリプトが組み立てた場合など）も /foopack/video/… から返す
+  if (path.startsWith('/video/')) {
+    const res = await fetchOrigin(origin, '/foopack' + path + url.search, request);
+    const h = new Headers(res.headers); h.delete('x-robots-tag');
+    return new Response(res.body, { status: res.status, headers: h });
   }
   // ブラウザが自動で読みに行くアイコン。新HPには favicon.ico が無いので png を返す（旧HPのトップへ転送すると画像として読めず止められる）
   if (path === '/favicon.ico') {
