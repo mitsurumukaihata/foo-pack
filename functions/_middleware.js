@@ -58,10 +58,14 @@ class JsonLd {
   }
 }
 
-async function fetchOrigin(origin, path, request) {
+async function fetchOrigin(origin, path, request, conditional = true) {
+  const headers = { 'Accept': request.headers.get('Accept') || '*/*' };
+  // 紹介動画（/foopack/video/）は「途中から読む」要求（Range）で読まれる＝そのまま渡し、206 もそのまま返す（iPhone の Safari は 206 が無いと再生しない）
+  // 書き換えて出すもの（ページ本体・manifest）には conditional=false＝「前と同じなら送らない」(304) を渡さない
+  for (const k of conditional ? ['Range', 'If-Range', 'If-None-Match', 'If-Modified-Since'] : []) { const v = request.headers.get(k); if (v) headers[k] = v; }
   return fetch(origin + path, {
     method: request.method === 'HEAD' ? 'HEAD' : 'GET',
-    headers: { 'Accept': request.headers.get('Accept') || '*/*', 'Accept-Encoding': 'identity' },
+    headers,
     redirect: 'manual',
   });
 }
@@ -77,7 +81,7 @@ function rewritePage(res, isFoopack) {
       .on('script[type="application/ld+json"]', new JsonLd());
   }
   const h = new Headers(res.headers);
-  h.delete('content-length'); h.delete('x-robots-tag');
+  h.delete('content-length'); h.delete('x-robots-tag'); h.delete('etag'); h.delete('last-modified');   // 書き換えた中身なので、元の目印は付けない
   h.set('cache-control', 'public, max-age=0, must-revalidate');
   return rw.transform(new Response(res.body, { status: res.status, headers: h }));
 }
@@ -106,13 +110,13 @@ export async function onRequest({ request }) {
   }
   // f.o.oパックのページ本体
   if (path === '/') {
-    const res = await fetchOrigin(origin, '/foopack/' + url.search, request);
+    const res = await fetchOrigin(origin, '/foopack/' + url.search, request, false);
     if (res.status !== 200) return new Response('ただいま表示できません。時間をおいてもう一度お試しください。', { status: 502, headers: { 'content-type': 'text/plain; charset=utf-8' } });
     return rewritePage(res, true);
   }
   // ホーム画面に追加したときの設定は、この住所の / を開くように
   if (path === '/foopack/manifest.json') {
-    const res = await fetchOrigin(origin, path, request);
+    const res = await fetchOrigin(origin, path, request, false);
     if (res.status !== 200) return res;
     const j = await res.json();
     j.id = '/'; j.start_url = '/'; j.scope = '/';
