@@ -4,10 +4,10 @@
 // ・新HPの公表までは、f.o.oパックのページだけで完結させる＝上のメニューはページの中の欄へ、ほかのページへは飛ばさない（下の LINKS・pageNav）
 // ・専用の住所では検索に載せる（正規の住所＝ https://foopack.tiremanager-foo.com/ ）
 // ・新HPに切り替えたら SWITCHED を true にして push する → どのアドレスも tiremanager-foo.com/foopack/ へ 301 で移る（配ったリンク・QRはそのまま使える）
-const SWITCHED = false;
+const SWITCHED = true;   // 2026/10/8 新HPを本番に切り替え（向畑「www で切り替えて」）
 
 const SELF = 'https://foopack.tiremanager-foo.com';
-const OLD_HP = 'https://tiremanager-foo.com';
+const OLD_HP = 'https://www.tiremanager-foo.com';   // 切り替え後の会社HP（www 付き・2026/10/8）。転送の行き先
 const NEW_HP = 'https://foo-hp.pages.dev';                        // 新HPの本番
 const NEW_HP_DRAFT = 'https://foopack-draft.foo-hp.pages.dev';    // 新HPの確認用（この中継の確認用の住所 *.foo-pack.pages.dev ではこちらを見せる）
 const NEW_HP_PUBLIC = 'https://preview.tiremanager-foo.com';      // 新HPの本番を会社の住所で（見た目・スクリプト・画像・動画はここから直接読ませる）
